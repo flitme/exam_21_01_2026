@@ -21,7 +21,7 @@ class AddRoom:
 
 class Command(ABC):
     '''Родительский класс для всех команд в нём мы делаем 2 абстрактных метода,
-    чтобы они были обязательные для всех его дочерних классов'''
+     чтобы они были обязательные для всех его дочерних классов'''
     @abstractmethod
     def execute(self, user, room):
         pass
@@ -35,7 +35,7 @@ class CreateBooking(Command):
 
     def execute(self, user, room):
         '''На вход получает два объекта: пользователя и комнату'''
-        if room.status == "свободно":
+        if room.status == 'свободно':
             room.status = 'забронировано'
             room.current_user = user.user_id
             user.history.append((room.status, user.user_id))
@@ -50,9 +50,9 @@ class CreateBooking(Command):
         if stat == room.status and user.user_id == us_id:
             room.status = "свободно"
             room.current_user = None
-            print("Бронь отменена (с помощью UNDO)")
+            print('Бронь отменена (с помощью UNDO)')
         else:
-            print("Вы не можете снять бронь (с помощью UNDO)")
+            print('Вы не можете снять бронь (с помощью UNDO)')
 
 class CancelBooking(Command):
     '''Отмена брони не зависимо от последней операции(в любой момент)'''
@@ -65,18 +65,18 @@ class CancelBooking(Command):
             user.history.append((room.status, user.user_id))
             print(f'Комната {room.number} разбронирована {user.name}')
         else:
-            print("Вы не можете снять бронь")
+            print('Вы не можете снять бронь')
 
     def undo(self, user, room):
         '''Отмена отмены брони! на вход также получает два объекта: пользователя и комнату
         Работает только если последняя операция была отмена брони, причём той же комнаты'''
         stat, us_id = user.history[-1]
         if stat == room.status and user.user_id == us_id:
-            room.status = "забронировано"
+            room.status = 'забронировано'
             room.current_user = user.user_id
-            print("Бронь востановленна (с помощью UNDO)")
+            print('Бронь востановленна (с помощью UNDO)')
         else:
-            print("Вы не можете востановить бронь (с помощью UNDO)")
+            print('Вы не можете востановить бронь (с помощью UNDO)')
 
 class CheckIn(Command):
     '''Заезд в номер'''
@@ -100,11 +100,11 @@ class CheckIn(Command):
         Работает только если последняя операция была въезд, причём в ту же комнату '''
         stat, us_id = user.history[-1]
         if stat == room.status and user.user_id == us_id:
-            room.status = "свободно"
+            room.status = 'свободно'
             room.current_user = None
-            print("Въезд отменён (с помощью UNDO)")
+            print('Въезд отменён (с помощью UNDO)')
         else:
-            print("Вы не можете отменить въезд (с помощью UNDO)")
+            print('Вы не можете отменить въезд (с помощью UNDO)')
 
 class CheckOut(Command):
     '''Выезд из номера'''
@@ -123,11 +123,11 @@ class CheckOut(Command):
         Работает только если последняя операция была выезд, причём из той же комнаты'''
         stat, us_id = user.history[-1]
         if stat == room.status and user.user_id == us_id:
-            room.status = "занята"
+            room.status = 'занята'
             room.current_user = user.user_id
-            print("Выезд отменён (с помощью UNDO)")
+            print('Выезд отменён (с помощью UNDO)')
         else:
-            print("Вымитайтесь! Вам тут не рады! (с помощью UNDO)")
+            print('Вымитайтесь! Вам тут не рады! (с помощью UNDO)')
 
 class HotelBookingSystem:
     def cmd(self, command, user, room):
