@@ -1,3 +1,6 @@
+from abc import abstractmethod, ABC
+
+
 class RegisterGuest:
     '''Создание пользователя. Принимает на вход имя и уникальный id
     история, которая используется для undo изначально пустая'''
@@ -16,12 +19,14 @@ class AddRoom:
         self.status = "свободно"
         self.current_user = None
 
-class Command:
-    '''Родительский класс для всех команд'''
-
+class Command(ABC):
+    '''Родительский класс для всех команд в нём мы делаем 2 абстрактных метода,
+    чтобы они были обязательные для всех его дочерних классов'''
+    @abstractmethod
     def execute(self, user, room):
         pass
 
+    @abstractmethod
     def undo(self, user, room):
         pass
 
